@@ -48,15 +48,43 @@ class HashMap {
 
   get(key) {
     const bucket = this.hash(key);
+    if (!this.has(key)) {
+      return null;
+    } else {
+      let current = this.buckets[bucket];
+      while (current.key != key) {
+        current = current.next;
+      }
+      return current.value;
+    }
   }
 
   has(key) {
     const bucket = this.hash(key);
     let current = this.buckets[bucket];
     while (current != null) {
-      current.key == key ? true : (current = current.next);
+      if (current.key == key) {
+        return true;
+      } else {
+        current = current.next;
+      }
     }
     return false;
+  }
+
+  remove(key) {
+    const bucket = this.hash(key);
+    let current = this.buckets[bucket];
+    let previous = null;
+
+    if (!this.has(key)) {
+      return false;
+    } else {
+      if (current.key == key) {
+        current = current.next;
+      } else {
+      }
+    }
   }
 
   checkIndexValidity(index) {
@@ -66,7 +94,19 @@ class HashMap {
   }
 }
 
-const hashMap = new HashMap();
-hashMap.set('test', 4);
-hashMap.set('addad', 5);
-hashMap.set('adhgfh', 5);
+const test = new HashMap();
+
+test.set('apple', 'red');
+test.set('banana', 'yellow');
+test.set('carrot', 'orange');
+test.set('dog', 'brown');
+test.set('elephant', 'gray');
+test.set('frog', 'green');
+test.set('grape', 'purple');
+test.set('hat', 'black');
+test.set('ice cream', 'white');
+test.set('jacket', 'blue');
+test.set('kite', 'pink');
+test.set('lion', 'golden');
+
+console.log(test.has('banana'));

@@ -25,28 +25,27 @@ class HashMap {
 
   set(key, value) {
     const bucket = this.hash(key);
-    if (!this.has(key)) {
+    if (this.buckets[bucket] == null) {
       const newNode = new Node(key, value);
-      if (this.buckets[bucket] == null) {
-        this.buckets[bucket] = newNode;
-      } else {
-        let current = this.buckets[bucket];
-        while (current != null) {
-          current = current.next;
-        }
-        current = newNode;
-      }
+      this.buckets[bucket] = newNode;
       this.keysAmount++;
     } else {
       let current = this.buckets[bucket];
-      while (current.key != key) {
+      while (current.next != null) {
+        if ((current.key = key)) {
+          current.value = value;
+          return;
+        }
         current = current.next;
       }
-      current.value = value;
+      const newNode = new Node(key, value);
+      current.next = newNode;
+      this.keysAmount++;
     }
   }
 
   get(key) {
+    //RIFARE
     const bucket = this.hash(key);
     if (!this.has(key)) {
       return null;
@@ -61,31 +60,36 @@ class HashMap {
 
   has(key) {
     const bucket = this.hash(key);
-    let current = this.buckets[bucket];
-    while (current != null) {
-      if (current.key == key) {
-        return true;
-      } else {
+    if (this.buckets[bucket] != null) {
+      let current = this.buckets[bucket];
+      while (current != null) {
+        if (current.key == key) {
+          return true;
+        }
         current = current.next;
       }
+      return false;
     }
     return false;
   }
 
-  remove(key) {
-    const bucket = this.hash(key);
-    let current = this.buckets[bucket];
-    let previous = null;
+  // remove(key) {
+  //   const bucket = this.hash(key);
+  //   let current = this.buckets[bucket];
+  //   let previous = null;
 
-    if (!this.has(key)) {
-      return false;
-    } else {
-      if (current.key == key) {
-        current = current.next;
-      } else {
-      }
-    }
-  }
+  //   if (!this.has(key)) {
+  //     return false;
+  //   } else {
+  //     while (current.next != null)
+  //     if (current.key != key) {
+  //       previous = current;
+  //       current = current.next;
+  //     } else {
+  //       previous = current.next
+  //     }
+  //   }
+  // }
 
   checkIndexValidity(index) {
     if (index < 0 || index >= buckets.length) {
@@ -109,4 +113,4 @@ test.set('jacket', 'blue');
 test.set('kite', 'pink');
 test.set('lion', 'golden');
 
-console.log(test.has('banana'));
+console.log(test.has('asdasd'));

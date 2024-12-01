@@ -20,10 +20,12 @@ class HashMap {
     for (let i = 0; i < key.length; i++) {
       hashCode = primeNumber * hashCode + key.charCodeAt(i);
     }
+
     return hashCode % this.capacity;
   }
 
   set(key, value) {
+    this.resize();
     const bucket = this.hash(key);
     if (this.buckets[bucket] == null) {
       const newNode = new Node(key, value);
@@ -31,25 +33,28 @@ class HashMap {
       this.keysAmount++;
     } else {
       let current = this.buckets[bucket];
-      while (current.next != null) {
-        if ((current.key = key)) {
+      while (current != null) {
+        if (current.key == key) {
           current.value = value;
           return;
+        } else {
+          if (current.next == null) {
+            current.next = new Node(key, value);
+            this.keysAmount++;
+            return;
+          } else {
+            current = current.next;
+          }
         }
-        current = current.next;
       }
-      const newNode = new Node(key, value);
-      current.next = newNode;
-      this.keysAmount++;
     }
   }
 
   get(key) {
-    //RIFARE
-    const bucket = this.hash(key);
     if (!this.has(key)) {
       return null;
     } else {
+      const bucket = this.hash(key);
       let current = this.buckets[bucket];
       while (current.key != key) {
         current = current.next;
@@ -73,23 +78,85 @@ class HashMap {
     return false;
   }
 
-  // remove(key) {
-  //   const bucket = this.hash(key);
-  //   let current = this.buckets[bucket];
-  //   let previous = null;
+  remove(key) {
+    const bucket = this.hash(key);
+    let current = this.buckets[bucket];
+    let previous = null;
 
-  //   if (!this.has(key)) {
-  //     return false;
-  //   } else {
-  //     while (current.next != null)
-  //     if (current.key != key) {
-  //       previous = current;
-  //       current = current.next;
-  //     } else {
-  //       previous = current.next
-  //     }
-  //   }
-  // }
+    if (!this.has(key)) {
+      return false;
+    } else {
+      while (current.key != key) {
+        previous = current;
+        current = current.next;
+      }
+      previous.next = current.next;
+      current = null;
+      this.keysAmount--;
+      return true;
+    }
+  }
+
+  length() {
+    return this.keysAmount;
+  }
+
+  clear() {
+    for (let i = 0; i < this.capacity; i++) {
+      this.buckets[i] = null;
+    }
+  }
+
+  keys() {
+    for (let i = 0; i < this.capacity; i++) {
+      if (this.buckets[i]) {
+        let current = this.buckets[i];
+        while (current != null) {
+          console.log(current.key);
+          current = current.next;
+        }
+      }
+    }
+  }
+
+  values() {
+    for (let i = 0; i < this.capacity; i++) {
+      if (this.buckets[i]) {
+        let current = this.buckets[i];
+        while (current != null) {
+          console.log(current.value);
+          current = current.next;
+        }
+      }
+    }
+  }
+
+  entries() {
+    let entriesArray = [];
+    for (let i = 0; i < this.capacity; i++) {
+      if (this.buckets[i]) {
+        let current = this.buckets[i];
+        while (current != null) {
+          let currentEntrie = [current.key, current.value];
+          entriesArray.push(currentEntrie);
+          current = current.next;
+        }
+      }
+    }
+    //console.log(entriesArray);
+    return entriesArray;
+  }
+
+  resize() {
+    //QUESTO!!!
+    if (this.length() >= this.capacity * this.loadFactor) {
+      this.capacity *= 2;
+      let currentEntries = this.entries();
+      console.log(currentEntries);
+      console.log('this');
+      //      this.clear();
+    }
+  }
 
   checkIndexValidity(index) {
     if (index < 0 || index >= buckets.length) {
@@ -113,4 +180,4 @@ test.set('jacket', 'blue');
 test.set('kite', 'pink');
 test.set('lion', 'golden');
 
-console.log(test.has('asdasd'));
+test.entries();

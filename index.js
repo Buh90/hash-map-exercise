@@ -8,7 +8,7 @@ class Node {
 
 class HashMap {
   constructor() {
-    this.buckets = new Array(8).fill(null);
+    this.buckets = new Array(16).fill(null);
     this.loadFactor = 0.75;
     this.capacity = this.buckets.length;
     this.keysAmount = 0;
@@ -105,6 +105,7 @@ class HashMap {
     for (let i = 0; i < this.capacity; i++) {
       this.buckets[i] = null;
     }
+    this.keysAmount = 0;
   }
 
   keys() {
@@ -143,41 +144,39 @@ class HashMap {
         }
       }
     }
-    //console.log(entriesArray);
     return entriesArray;
   }
 
   resize() {
-    //QUESTO!!!
     if (this.length() >= this.capacity * this.loadFactor) {
       this.capacity *= 2;
       let currentEntries = this.entries();
-      console.log(currentEntries);
-      console.log('this');
-      //      this.clear();
+      this.clear();
+      for (let entrie of currentEntries) {
+        this.set(entrie[0], entrie[1]);
+      }
     }
   }
 
   checkIndexValidity(index) {
     if (index < 0 || index >= buckets.length) {
-      throw new Error('Trying to access index out of bound');
+      throw new Error("Trying to access index out of bound");
     }
   }
 }
 
-const test = new HashMap();
+// const test = new HashMap();
 
-test.set('apple', 'red');
-test.set('banana', 'yellow');
-test.set('carrot', 'orange');
-test.set('dog', 'brown');
-test.set('elephant', 'gray');
-test.set('frog', 'green');
-test.set('grape', 'purple');
-test.set('hat', 'black');
-test.set('ice cream', 'white');
-test.set('jacket', 'blue');
-test.set('kite', 'pink');
-test.set('lion', 'golden');
-
-test.entries();
+// test.set("apple", "red");
+// test.set("banana", "yellow");
+// test.set("carrot", "orange");
+// test.set("dog", "brown");
+// test.set("elephant", "gray");
+// test.set("frog", "green");
+// test.set("grape", "purple");
+// test.set("hat", "black");
+// test.set("ice cream", "white");
+// test.set("jacket", "blue");
+// test.set("kite", "pink");
+// test.set("lion", "golden");
+// test.set("moon", "silver");
